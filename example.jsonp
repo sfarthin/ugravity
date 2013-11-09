@@ -1,0 +1,29 @@
+uGravity({	
+	objects: [
+		{
+			name: 		"Earth",
+			radius: 	4.2564*Math.pow(10,-5), 	// AU
+			mass: 		5.9721986*Math.pow(10,24), 	// Kg
+			x: 			0.4,						// point from center in AU
+			y: 			0.2,						// point from center in AU
+			velocityX: 	0,							// 1 AU/s
+			velocityY: 	-0.5, 						// 1 AU/s
+			color: 		"#ff0000",
+			scaleSize: 	700
+		},
+		{
+			name: 		"Sun",
+			radius: 	0.004649, 					// AU
+			mass: 	 	1.98892*Math.pow(10,30), 	// Kg
+			x: 			0,							// point from center in AU
+			y: 			0,							// point from center in AU
+			velocityX: 	0,							// 1AU/s
+			velocityY: 	0,							// 1AU/s
+			color: 		"#00ff00",
+			scaleSize: 	30,
+		}
+	],
+	
+	breakpoints: []
+	
+});

@@ -107,11 +107,11 @@
 		**/
 		this.drawObject = function(/**CanvasRenderingContext2D*/ ctx, /*Object*/object, settings) {
 
-			var SCALE = 100;
+			var SCALE = 80;
 
 			object.scaledX 		= (SCALE * object.x) + this.canvas.width/2;
 			object.scaledY 		= (SCALE * object.y) + this.canvas.height/2;
-			object.scaledRadius = SCALE * object.scaleSize * object.radius;
+			object.scaledRadius = SCALE * object.radius * 20;
 	
 			ctx.save();
 
@@ -205,7 +205,7 @@
 					
 			        // calculate the time since the last frame
 			        var thisFrame = new Date().getTime();
-			        var dt = (thisFrame - lastFrame)/1000 * 5;
+			        var dt = (thisFrame - lastFrame)/1000 * SETTINGS.TIME_SCALE;
 			        lastFrame = thisFrame;
 					
 					if(SETTINGS.SECONDS_BETWEEN_FRAMES < (thisFrame - lastRender)/1000) {

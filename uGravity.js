@@ -38,6 +38,67 @@
 		
 		this.worker = new Worker(blobURL);
 		
+		
+		
+		this.offsetX = 0;
+		this.offsetY = 0;
+		this.scale = 80;
+		this.mousedown = false;
+		 		
+		// 	    canvas.addEventListener("dragstart", function( event ) {
+		var last_position_x,
+			last_position_y;
+				
+		canvas.addEventListener ("mousedown", function (event) {
+			self.mousedown = true;
+			canvas.style.cursor = 'grabbing';
+		});
+		
+		canvas.addEventListener ("mouseup", function (event) {
+			self.mousedown = false;
+			last_position_x = null;
+			last_position_y = null;
+			canvas.style.cursor = 'default';
+		});
+		
+		canvas.addEventListener('mousewheel', function(e) {
+			var wheelData = e.detail ? e.detail * -1 : e.wheelDelta / 10;
+			
+			// need to scale into the position of the cursor;
+			self.scale += wheelData;
+			if(self.scale < 1)
+				self.scale = 1;
+				
+			// self.offsetX += wheelData;
+			// self.offsetY += wheelData;
+				
+
+			e.stopPropagation();
+			e.preventDefault();
+			return false;
+		}, false);  
+				
+		canvas.addEventListener ("mousemove", function (event) {
+			if(self.mousedown) {
+	            var x = event.clientX;
+	            var y = event.clientY;
+			
+				if(last_position_x && last_position_y) {
+					self.offsetX += (x - last_position_x)/self.scale;
+					self.offsetY += (y - last_position_y)/self.scale;
+				}
+			
+				last_position_x = x;
+				last_position_y = y;
+			}
+			
+        });
+	     // }, false);
+			// 		 
+			//  	    canvas.addEventListener("dragend", function( event ) {
+			// canvas.removeEventListener("mousemove");
+			//  	     }, false);
+		
 
 	    /**
 		*
@@ -107,11 +168,9 @@
 		**/
 		this.drawObject = function(/**CanvasRenderingContext2D*/ ctx, /*Object*/object, settings) {
 
-			var SCALE = 80;
-
-			object.scaledX 		= (SCALE * object.x) + this.canvas.width/2;
-			object.scaledY 		= (SCALE * object.y) + this.canvas.height/2;
-			object.scaledRadius = SCALE * object.radius * 20;
+			object.scaledX 		= (this.scale * (object.x + this.offsetX)) + this.canvas.width/2;
+			object.scaledY 		= (this.scale * (object.y + this.offsetY)) + this.canvas.height/2;
+			object.scaledRadius = this.scale * object.radius * 20;
 	
 			ctx.save();
 

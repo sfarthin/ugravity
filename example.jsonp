@@ -8,7 +8,7 @@ var Kepler16A = {
 	radius: 	0.6489 * 0.0046491, 	// AU
 	mass: 		0.6897*(Math.pow(10,30)), 	// Kg
 	x: 			0,						// point from center in AU
-	y: 			0,						// point from center in AU
+	y: 			-1,						// point from center in AU
 	velocityX: 	0,							// 1 AU/s
 	velocityY: 	0, 						// 1 AU/s
 	color: 		"#ff0000"
@@ -17,7 +17,7 @@ Kepler16B = {
 	name: 		"Kepler-16B",
 	radius: 	0.22623  * 0.0046491, 	// AU
 	mass: 		0.20255*(Math.pow(10,30)), 	// Kg
-	y: 			0,						// point from center in AU
+	y: 			-1,						// point from center in AU
 	color: 		"#ff0000"
 };
 
@@ -27,13 +27,20 @@ Kepler16B.x = 0.22431 + Kepler16B.radius + Kepler16A.radius;
 // v = SQRT (G • Mcentral / R)
 // http://www.physicsclassroom.com/calcpad/circgrav/
 //Kepler16B.velocityX  = 0;
-var velocity  = Math.pow(G * Kepler16A.mass / Kepler16B.x, 0.5);
+var velocity  					= Math.pow(G * Kepler16A.mass / Kepler16B.x, 0.5),
+	F 							= Kepler16A.mass * velocity;
+	
+	// 0.5 F = m1 * v1, v1 = 0.5*F/m1
+	// 0.5 F = m2 * v2
+
+console.log(Math.pow(G * Kepler16A.mass / Kepler16B.x, 0.5));
 
 Kepler16B.velocityX = 0;
+//Kepler16B.velocityY = -1 * 0.5 * F / Kepler16B.mass;
 Kepler16B.velocityY = -1 * velocity;
 
 Kepler16A.velocityX = 0;
-Kepler16A.velocityY = 0;//0.5 * Kepler16B.velocity;
+Kepler16A.velocityY = 0; //0.5 * F / Kepler16A.mass;
 
 uGravity({	
 	objects: [

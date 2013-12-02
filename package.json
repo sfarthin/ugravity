@@ -1,0 +1,13 @@
+{
+	"name": "uGravity"
+	, "description": "Simple physics engine of Newton's law of universal gravitation run in real-time."
+	, "version": "0.0.1"
+	, "homepage": "https://github.com/sfarthin/ugravity"
+	, "author": "Steve Farthing <me@stevefar.com> (http://stevefar.com)"
+	, "keywords": ["gravity", "ugravity", "universal gravity"]
+	, "main": "./uGravity.js"
+	, "repository": {
+		  "type": "git"
+		, "url": "https://github.com/sfarthin/ugravity.git"
+	}
+}

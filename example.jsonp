@@ -2,6 +2,7 @@ var G 				= 6.67*Math.pow(10, -32);
 
 
 var Kepler16A = {
+	id: 123123,
 	name: 		"Kepler-16A",
 	label: 		"A",
 	
@@ -14,6 +15,7 @@ var Kepler16A = {
 	color: 		"#0000FF"
 },
 Kepler16B = {
+	id: 1231239,
 	name: 		"Kepler-16B",
 	label: 		"B",
 	radius: 	0.22623  * 0.0046491, 	// AU
@@ -38,26 +40,18 @@ var velocity  					= Math.pow(G * Kepler16A.mass / Kepler16B.x, 0.5), // Acceler
 	// 0.5 F = m2 * v2
 
 Kepler16B.velocityX = 0;
-Kepler16B.velocityY = -1 * velocity * (Kepler16A.mass / (Kepler16A.mass + Kepler16B.mass));
+Kepler16B.velocityY = -1 * velocity;// * (Kepler16A.mass / (Kepler16A.mass + Kepler16B.mass));
 //Kepler16B.velocityY = 0;
 
 Kepler16A.velocityX = 0;
-Kepler16A.velocityY = velocity * (Kepler16B.mass / (Kepler16A.mass + Kepler16B.mass)); //0.5 * F / Kepler16A.mass;
-//Kepler16A.velocityY = 0;
+//Kepler16A.velocityY = velocity * (Kepler16B.mass / (Kepler16A.mass + Kepler16B.mass)); //0.5 * F / Kepler16A.mass;
+Kepler16A.velocityY = 0;
 
 uGravity({
 	
 	title: "Kepler 16",
 	
 	scale: 1636,
-	view: [0, 0],
-	units: {
-		distance: 	"AU",
-		time: 		"days"
-	},
-	graphpaper: {
-		cellsAccross: 10
-	},
 	print: [
 		"Kepler-16A.mass"
 	],
@@ -92,7 +86,9 @@ uGravity({
 		Kepler16B
 	],
 	
-	breakpoints: []
+	breakpoints: [],
+	
+	autoStart: true
 	
 });
 

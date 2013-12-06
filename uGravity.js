@@ -118,7 +118,7 @@
 			
 		
 			// If the options has the simulation start automatically, so be it.
-			if(this.autoStart) this.start();
+			if(this.state == "start") this.start();
 		}
 		
 		/**
@@ -133,20 +133,31 @@
 			
 			// Lets feed in all our settings
 			extend(this, {
+				
+				// title of this project
+				title: "",
+				
+				// Objects with mass
+				objects: [],
+				
+				// Zoom Level
 				scale: 80,
+				
+				// Panning of the screen
 				offsetX: 0,
 				offsetY: 0,
+				
+				// how fast time is moving 1x, 10x, etc
+				timeScale: 1,
+				
+				// "start" or "stop" indicates whether its running or not.
 				state: 'stop',
-				settings: {
-					FPS: 30,
-					TIME_SCALE: 0.5
-				},
+				
+				// Frames per second for rendering
+				fps: 30,
+				
+				// About how many cells accross fo the graph paper
 				cellsAccross: 10,
-				units: {
-					distance: 	"AU"
-				},
-				objects: [],
-				title: ""
 			}, this.export(), opts);
 	
 			if(restart) {
@@ -182,7 +193,7 @@
 				objects = this.objects;
 
 			// Lets find what scale would allow the object to be visible if the viewport is centered at 0,0 (center of gravity).
-			if(objects) {
+			if(objects.length > 1) {
 
 				for(var i in objects) {
 					var object = this.objects[i],
@@ -200,6 +211,16 @@
 				if(max_scale > 0 && max_scale < Infinity) this.scale = max_scale;
 				this.render();
 					
+			} else if(objects.length == 1) {
+				var scale = Math.abs(canvas.height/ 2 / (this.objects[0].radius)) - (canvas.height/ 4 - 50);
+				
+				if(scale < Infinity && scale > 0) {
+					this.scale = scale;
+					this.render();
+				}
+			} else if(!objects.length){
+				this.scale = 1;
+				this.render();
 			}
 			
 		}
@@ -273,7 +294,7 @@
 				avg_x += object.x * (object.mass/total_mass);
 				avg_y += object.y * (object.mass/total_mass);
 			});			
-			for(var i in opts.objects) {
+			for(var i in this.objects) {
 				this.objects[i].x = this.objects[i].x - avg_x;
 				this.objects[i].y = this.objects[i].y - avg_y;
 			}
@@ -422,10 +443,33 @@
 		};
 		
 		this.drawScaleBox = function() {
+			function addCommas(nStr) {
+				nStr += '';
+				x = nStr.split('.');
+				x1 = x[0];
+				x2 = x.length > 1 ? '.' + x[1] : '';
+				var rgx = /(\d+)(\d{3})/;
+				while (rgx.test(x1)) {
+					x1 = x1.replace(rgx, '$1' + ',' + '$2');
+				}
+				return x1 + x2;
+			}
+			
+			var cellWidthText, units;
+			
+			if(this.cellWidth / this.scale > 0.01) {
+				cellWidthText = Math.round(this.cellWidth / this.scale * 100000) / 100000;
+				units = "AU";
+			} else {
+				cellWidthText = Math.round(this.cellWidth / this.scale * 1.496e+8);
+				units = "km";
+			}
+				
+				
 
 			ctx.font = '24px HelveticaNeue-Light';
 			
-			var roundedScale = (Math.round(this.cellWidth / this.scale * 100000) / 100000) + " " + this.units.distance,
+			var roundedScale = addCommas(cellWidthText) + " " + units,
 				textWidth 	 = ctx.measureText(roundedScale).width,
 				height 		= 40,
 				padding 	= 20,
@@ -561,7 +605,7 @@
 				// These variables keep track of time passed.
 				lastFrame 	= new Date().getTime(),
 				lastRender	= new Date().getTime(),
-				seconds_between_frames = 1 / opts.settings.FPS;
+				seconds_between_frames = 1 / opts.fps;
 		
 			/**
 			*
@@ -576,7 +620,7 @@
 		        var thisFrame = new Date().getTime(),
 					
 					// Lets see the time difference
-					dt = (thisFrame - lastFrame)/1000 * opts.settings.TIME_SCALE;
+					dt = (thisFrame - lastFrame)/1000 * opts.timeScale;
 					
 				// lets set our lastFrame for next time.
 		        lastFrame = thisFrame;

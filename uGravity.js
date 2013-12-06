@@ -75,8 +75,8 @@
 			
 				// need to scale into the position of the cursor;
 				this.scale *= 1 + wheelData;
-				if(this.scale < 1)
-					this.scale = 1;
+				if(this.scale < 0)
+					this.scale = 0.001;
 				
 				this.zooming = true;
 
@@ -196,9 +196,9 @@
 			if(objects.length > 1) {
 
 				for(var i in objects) {
-					var object = this.objects[i],
-						max_scale_x  = Math.abs(canvas.width/ 2 / object.x) - (canvas.width/ 4),
-						max_scale_y  = Math.abs(canvas.height/ 2 / object.y) - (canvas.height/ 4),
+					var object = objects[i],
+						max_scale_x  = Math.abs((canvas.width/ 2 - 70) / (object.x + object.radius)),// - (canvas.width/4),
+						max_scale_y  = Math.abs((canvas.height/ 2 - 70) / (object.y + object.radius)),// - (canvas.height/4),
 						obj_scale = ((max_scale_x < max_scale_y && max_scale != Infinity) || max_scale_y == Infinity ? max_scale_x : (max_scale_y != Infinity ? max_scale_y : null));
 						
 						if(obj_scale && !max_scale || max_scale > obj_scale) {
@@ -206,13 +206,13 @@
 						}
 					
 				}
-				
+
 				// Lets refresh our screen, if planets are screwy lets not normalize or we'll freeze the screen.
 				if(max_scale > 0 && max_scale < Infinity) this.scale = max_scale;
 				this.render();
 					
 			} else if(objects.length == 1) {
-				var scale = Math.abs(canvas.height/ 2 / (this.objects[0].radius)) - (canvas.height/ 4 - 50);
+				var scale = Math.abs((canvas.height/ 2 - 70) / (this.objects[0].radius)) - (canvas.height/ 8);
 				
 				if(scale < Infinity && scale > 0) {
 					this.scale = scale;
@@ -410,10 +410,6 @@
 					y = (this.scale * (object.y + this.offsetY)) + canvas.height/2,
 					x2 = (this.scale * object.x) * -1,
 					y2 = (this.scale * object.y) * -1;
-				
-					///console.log(topEdge, bottomEdge, y);
-					// if(object.name == "Kepler-16A")
-					// 	document.getElementById("debug").innerHTML = [topEdge, bottomEdge, y2].join(", ");
 				
 				if(bottomEdge < y2 - 20) {
 					paintArrow(x,0,"down");

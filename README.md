@@ -1,1 +1,1 @@
-See [uGravity.com](https://github.com/sfarthin/ugravity.com).
+See [https://github.com/sfarthin/ugravity.com](https://github.com/sfarthin/ugravity.com).

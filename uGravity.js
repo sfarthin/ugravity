@@ -258,6 +258,7 @@
 				case "render": 
 					// Lets take in all the new State the Physics Worker gave us, and render the page.
 					this.objects = data.objects;
+					this.elapsedTime = data.elapsedTime;
 					this.render(); 
 					return;
 				
@@ -315,6 +316,8 @@
 			
 			// Draw Scale box in left bottom corner.
 			this.drawScaleBox();
+			
+			this.drawTimeBox();
 			
 			// Lets draw labels for objects that are too small
 			this.drawLabels();
@@ -495,6 +498,66 @@
 			
 		};
 		
+		this.drawTimeBox = function() {
+			function addCommas(nStr) {
+				nStr += '';
+				x = nStr.split('.');
+				x1 = x[0];
+				x2 = x.length > 1 ? '.' + x[1] : '';
+				var rgx = /(\d+)(\d{3})/;
+				while (rgx.test(x1)) {
+					x1 = x1.replace(rgx, '$1' + ',' + '$2');
+				}
+				return x1 + x2;
+			}
+			
+			var text;
+
+			text = Math.round(this.elapsedTime) + " seconds";
+			
+			if(this.elapsedTime > 60 * 5) {
+				text = addCommas(Math.round(this.elapsedTime/60)) + " minutes";
+			}
+			if(this.elapsedTime > 60 * 60 * 5) {
+				text = addCommas(Math.round(this.elapsedTime/60/60)) + " hours";
+			}
+			if(this.elapsedTime > 60 * 60 * 24 * 5) {
+				text = addCommas(Math.round(this.elapsedTime/60/60/24)) + " days";
+			}
+			if(this.elapsedTime > 60 * 60 * 24 * 365 * 10) {
+				text = addCommas(Math.round(this.elapsedTime/60/60/24/365)) + " years";
+			}
+
+			// 	units = "AU";
+			// } else {
+			// 	cellWidthText = Math.round(this.cellWidth / this.scale * 1.496e+8);
+			// 	units = "km";
+			// }
+				
+				
+
+			ctx.font = '24px HelveticaNeue-Light';
+			
+			var textWidth 	 = ctx.measureText(text).width,
+				height 		= 40,
+				padding 	= 20,
+				textPadding	= 8,
+				width = textPadding + padding + textWidth;
+			
+			ctx.fillStyle = "#FFF";
+			ctx.strokeStyle = "black";
+			ctx.shadowBlur = 15;
+			ctx.fillRect(canvas.width - padding - width,canvas.height - height - padding,width,height); // 
+			ctx.shadowBlur = 0;
+			
+			ctx.lineWidth = 2;
+			ctx.strokeRect(canvas.width - padding - width, canvas.height - height - padding, width, height); // canvas.height - 
+			
+			ctx.fillStyle = "#000000";
+			ctx.fillText(text, canvas.width - (padding + textPadding - 20) - width, canvas.height - padding - textPadding); 
+			
+		};
+		
 		
 		this.drawGraphPaper = function() {
 			var cellWidth 	= this.cellWidth; 
@@ -517,13 +580,8 @@
 				
 				var point = Math.abs((x - canvas.width/2)/this.scale - this.offsetX);
 				
-				// if(point < 0.00000000002) {
-				// 	ctx.lineWidth = 0.5;
-				// // } else if(Math.floor(point / ((cellWidth + xAlignment)/this.scale)) % 5 < 0.0000002) {
-				// // 	ctx.lineWidth = 0.5;
-				// } else {
-					ctx.lineWidth = 0.1;
-					//}
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#ccc";
 			    ctx.beginPath();
 			    ctx.moveTo(x,0);
 			    ctx.lineTo(x,canvas.height);
@@ -534,13 +592,8 @@
 				
 				var point = Math.abs((y - canvas.height/2)/this.scale - this.offsetY);
 				
-				// if(point < 0.00000000002) {
-				// 	ctx.lineWidth = 0.5;
-				// } else {
-					ctx.lineWidth = 0.1;
-					//}
-				
-				ctx.strokeStyle = "black";
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#ccc";
 			    ctx.beginPath();
 			    ctx.moveTo(0,y);
 			    ctx.lineTo(canvas.width,y);
@@ -599,6 +652,7 @@
 				//numFrames = 0,
 				
 				// These variables keep track of time passed.
+				elapsedTime = opts.elapsedTime,
 				lastFrame 	= new Date().getTime(),
 				lastRender	= new Date().getTime(),
 				seconds_between_frames = 1 / opts.fps;
@@ -617,13 +671,16 @@
 					
 					// Lets see the time difference
 					dt = (thisFrame - lastFrame)/1000 * opts.timeScale;
-					
+				
+				// Lets keep track of the elapsed time.
+				elapsedTime += dt;
+				
 				// lets set our lastFrame for next time.
 		        lastFrame = thisFrame;
 			
 				if(seconds_between_frames < (thisFrame - lastRender)/1000) {
 					// Lets indicate its time to render
-					postMessage({cmd: "render", objects: opts.objects});
+					postMessage({cmd: "render", objects: opts.objects, elapsedTime: elapsedTime});
 					//numFrames = 0;
 					lastRender = thisFrame;
 				}

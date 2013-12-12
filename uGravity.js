@@ -669,7 +669,7 @@
 					// calculate the time since the last frame
 		        var thisFrame = new Date().getTime(),
 					
-					// Lets see the time difference
+					// Lets see the time difference (seconds)
 					dt = (thisFrame - lastFrame)/1000 * opts.timeScale;
 				
 				// Lets keep track of the elapsed time.
@@ -694,24 +694,28 @@
 				
 						if(otherObject.mass && otherObject.name != object.name) {
 	
-							// Using our favorite F = G (m1*m2)/r^2
-							// r = distance between the centers of the masses
-							// G = 6.67 × 10^-8 gm^-1 cm^3 sec^-2
+							// http://www.arachnoid.com/ruby/gravity/index.html
 							var getDistance 	= function(a,b) { return Math.pow(Math.pow(b[1]-a[1], 2) + Math.pow(b[0]-a[0], 2), 0.5); },
 						
-								G 				= 6.67*Math.pow(10, -32),
+								m_in_au = 1.496e11,
+						
+								G 				= 6.674*Math.pow(10, -11),
 			
 								// distance formula
 								slope 			= (otherObject.y - object.y)/(otherObject.x - object.x),
 								angle 			= Math.atan(slope),
-								distance 		= getDistance([otherObject.x, otherObject.y], [object.x, object.y]), 	// AU
-								force  			= G * (object.mass * otherObject.mass) / Math.pow(distance, 2), 	// kg/s^2
+								distance 		= getDistance([otherObject.x, otherObject.y], [object.x, object.y])*m_in_au, // AU to meters
+								
+								// N*(m^2/kg^2) * (kg * kg) / m = N*m = 1kg*m^2/s^2
+								
+								force  			= G * (object.mass * otherObject.mass) / Math.pow(distance, 2) / m_in_au, 	// F = ma = 1kg(m/s^2)
 	
 								// http://zonalandeducation.com/mstm/physics/mechanics/forces/forceComponents/forceComponents.html
 								xForce = force * Math.cos(angle),
 								yForce = force * Math.sin(angle),
 	
 								//a = f/m1 because F = m*a
+								// lets then convert m/s^2 to AU/s^2
 								xAcceleration = Math.abs(xForce / object.mass),// * (object.x < this.x ? -1 : 1),
 								yAcceleration = Math.abs(yForce / object.mass);// * (object.y < this.y ? -1 : 1);
 		
@@ -733,9 +737,9 @@
 						}
 					}
 					
-					// Lets move each object that little bit.
-					opts.objects[i].x += object.velocityX * dt;
-					opts.objects[i].y += object.velocityY * dt;
+					// move objects a little bit
+					opts.objects[i].x += (object.velocityX) * dt;
+					opts.objects[i].y += (object.velocityY) * dt;
 				}		
 				
 			}

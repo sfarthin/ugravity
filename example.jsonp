@@ -26,6 +26,8 @@ Kepler16B = {
 
 var distanceBetweenStarCenters = 0.22431 + Kepler16B.radius + Kepler16A.radius;
 
+// Math.pow(Math.pow(41.079220*60*60,2), 1/3) 
+
 // Period 4.4379637 ... Math.pow(Math.pow(41.079220/365,2), 1/3) = 0.22
 Kepler16B.x = distanceBetweenStarCenters * (Kepler16A.mass / (Kepler16A.mass + Kepler16B.mass));
 Kepler16A.x = -1 * distanceBetweenStarCenters * (Kepler16B.mass / (Kepler16A.mass + Kepler16B.mass));
@@ -55,6 +57,8 @@ uGravity({
 	print: [
 		"Kepler-16A.mass"
 	],
+	
+	elapsedTime: 0,
 	
 	objects: [
 		// {

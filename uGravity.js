@@ -177,12 +177,10 @@
 				
 				// Prevents overscroll animation
 				// http://stackoverflow.com/questions/14307324/stop-overscroll-when-using-webkit-overflow-scrolling-touch
-				document.addEventListener('touchmove',
-				  function(e) {
-				    e.preventDefault();
-				  },
-				  false
-				);
+				canvas.addEventListener('touchmove',
+				function(e) {
+					e.preventDefault();
+				}, false );
 			}
 			
 		

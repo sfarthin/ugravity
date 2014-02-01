@@ -1,9 +1,12 @@
+
+
 !function (name, definition) {
 	// based on https://github.com/ded/domready for best support
 	if (typeof module != 'undefined') module.exports = definition()
 	else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
 	else this[name] = definition()
 }('uGravity', function(uGravity) {
+	
 	// Variable to catch data from jsonp datafiles until the onload method triggers. We then
 	// assign these options to the appropriate canvas.
 	var jsonp_opts;
@@ -39,7 +42,7 @@
 			return new uGravity(canvas, opts);
 	    }
 		
-			// A reference to our visible canvas
+		// A reference to our visible canvas
 		var mousedown = false,
 			last_position_x,
 			last_position_y;
@@ -94,9 +97,9 @@
 			* Allow user to Pan by click and dragging.
 			*
 			**/
-			canvas.addEventListener ("mousedown", function (event) { mousedown = true; });		
-			canvas.addEventListener ("mouseup", function (event) { mousedown = false; last_position_x = null; last_position_y = null; });
-			canvas.addEventListener ("mousemove", function (event) {
+			canvas.addEventListener ("mousedown", 	function (event) { mousedown = true; });		
+			canvas.addEventListener ("mouseup", 	function (event) { mousedown = false; last_position_x = null; last_position_y = null; });
+			canvas.addEventListener ("mousemove", 	function (event) {
 				if(mousedown) {
 		            var x = event.clientX;
 		            var y = event.clientY;
@@ -115,6 +118,72 @@
 				}
 			
 	        }.bind(this));
+			
+			/**
+			*
+			* Pinching and dragging (requires hammer js)
+			*
+			**/
+			if(typeof Hammer != undefined) {
+		        var hammertime = new Hammer(canvas, { drag_lock_to_axis: true });
+				
+				var original_x = null,
+					original_y = null,
+					original_scale = null;
+				
+		        hammertime.on("release drag pinch", function(ev) {
+	        	
+		            switch(ev.type) {
+		                case 'drag':
+							
+							if(typeof original_x == "number") {
+								this.offsetX = original_x + (ev.gesture.deltaX/this.scale)*2;
+								this.offsetY = original_y + (ev.gesture.deltaY/this.scale)*2;
+							} else {
+								original_x = this.offsetX;
+								original_y = this.offsetY;	
+							}
+							
+							if(!runningWorker) this.render();
+						
+							break;
+							
+						case 'pinch':
+							
+							if(ev.gesture.scale) {
+							
+								if(typeof original_scale == "number") {
+									this.scale = original_scale * ev.gesture.scale;
+								} else {
+									original_scale = this.scale;
+								}
+							
+								if(!runningWorker) this.render();
+							}
+							
+							break;
+							
+						case 'release':
+							
+							original_x = null;
+							original_y = null;
+							original_scale = null;
+							
+							break;
+							
+					}
+				
+		        }.bind(this));
+				
+				// Prevents overscroll animation
+				// http://stackoverflow.com/questions/14307324/stop-overscroll-when-using-webkit-overflow-scrolling-touch
+				document.addEventListener('touchmove',
+				  function(e) {
+				    e.preventDefault();
+				  },
+				  false
+				);
+			}
 			
 		
 			// If the options has the simulation start automatically, so be it.
@@ -259,7 +328,11 @@
 					// Lets take in all the new State the Physics Worker gave us, and render the page.
 					this.objects = data.objects;
 					this.elapsedTime = data.elapsedTime;
-					this.render(); 
+					
+					// requestAnimationFrame is called in the 
+					//if(typeof requestAnimationFrame != undefined) 
+					this.render();
+						
 					return;
 				
 				// @todo allow messages to be printed to the screen.
@@ -332,6 +405,10 @@
     
 	        // copy the back buffer to the displayed canvas
 	        live_ctx.drawImage(backBuffer, 0, 0);
+			
+			// if(this.worker && requestAnimationFrame)
+			// 	requestAnimationFrame(this.render);
+				
 	    };
 		
 		this.drawTitle = function() {

@@ -1,7 +1,7 @@
 {
 	"name": "ugravity",
 	"description": "Simple simulation of Newton's law of universal gravitation.",
-	"version": "0.0.4",
+	"version": "0.0.6",
 	"homepage": "https://github.com/sfarthin/ugravity",
 	"author": "Steve Farthing <me@stevefar.com> (https://stevefar.com)",
 	"keywords": ["gravity", "ugravity", "universal gravity"],

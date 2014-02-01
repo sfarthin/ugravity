@@ -8,7 +8,7 @@ var Kepler16A = {
 	
 	// https://en.wikipedia.org/wiki/Solar_radius solar radius = 0.0046491 AU
 	radius: 	0.6489 * 0.0046491, 	// AU
-	mass: 		0.6897*(Math.pow(10,30)), 	// Kg
+	mass: 		0.6897*(Math.pow(10,30))/5.9721986e24, 	// Kg
 	y: 			0,						// point from center in AU
 	velocityX: 	0,							// 1 AU/s
 	velocityY: 	0, 						// 1 AU/s

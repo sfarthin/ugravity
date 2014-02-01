@@ -311,6 +311,10 @@
 			runningWorker.postMessage(this.export());
 		}
 		
+		this.isRunning = function() {
+			return !!runningWorker;
+		}
+		
 		/**
 		*
 		* Handles messages from our worker
@@ -350,7 +354,14 @@
     
 	        // Clear our drawing contexts
 	        ctx.clearRect(0, 0, backBuffer.width, backBuffer.height);
-	        live_ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Lets make a white background for the video.
+	        ctx.rect(0, 0, backBuffer.width, backBuffer.height);
+			ctx.fillStyle = 'white';
+			ctx.fill();
+			
+			if(!this.onRender)
+				live_ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			/**
 			*
@@ -402,7 +413,12 @@
 			**/
     
 	        // copy the back buffer to the displayed canvas
-	        live_ctx.drawImage(backBuffer, 0, 0);
+	        
+			
+			if(this.onRender)
+				this.onRender(backBuffer);
+			else
+				live_ctx.drawImage(backBuffer, 0, 0);
 			
 			// if(this.worker && requestAnimationFrame)
 			// 	requestAnimationFrame(this.render);

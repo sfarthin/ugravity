@@ -37,6 +37,9 @@
 			return;
 		}
 		
+		if(opts && opts.state)
+			this.state = opts.state;
+		
 		// Lets ensure this is an instance while also allowing the uGravity(canvas,opts) syntax
 	    if (!(this instanceof uGravity)) {
 			return new uGravity(canvas, opts);
@@ -124,7 +127,7 @@
 			* Pinching and dragging (requires hammer js)
 			*
 			**/
-			if(typeof Hammer != undefined) {
+			if(typeof window.Hammer != "undefined") {
 		        var hammertime = new Hammer(canvas, { drag_lock_to_axis: true });
 				
 				var original_x = null,

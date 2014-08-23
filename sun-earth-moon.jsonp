@@ -15,9 +15,7 @@ uGravity({
 			"y":1.8614179595657845e-22,
 			"x":-0.0000030400266236668134,
 			"velocityX":0,
-			"velocityY":0,
-			"earth_mass":"333000",
-			"radius_in_km":"696342",
+			"velocityY":0
 		},
 		{
 			"id":"earth",
@@ -28,16 +26,7 @@ uGravity({
 			"y":-6.123013154932292e-17,
 			"x":0.9999969599733763,
 			"velocityX":2.4393896620258584e-23,
-			"velocityY":1.9919786096256684e-7,
-			"earth_mass":"1",
-			"radius_in_km":"6371",
-			
-			// Lets place the earth relative to the sun
-			"relative_object":"sun",
-			"relative_object_distance":"1",
-			"relative_object_direction":"90",
-			"velocity_in_km":"29.8",
-			"velocity_direction":"180",
+			"velocityY":1.9919786096256684e-7
 		},{
 			"id":"1386823517240-54",
 			"name":"Moon",
@@ -47,16 +36,7 @@ uGravity({
 			"y":-6.138914668436675e-17,
 			"x":1.0025939599733764,
 			"velocityX":2.4393896620258584e-23,
-			"velocityY":1.9237967914438503e-7,
-			"earth_mass":"0.0123",
-			"radius_in_km":"1737.5",
-			
-			// Lets palce the moon relative to the Earch
-			"relative_object":"earth",
-			"relative_object_distance":"0.002597",
-			"relative_object_direction":"90",
-			"velocity_in_km":"1.02",
-			"velocity_direction":"0",
+			"velocityY":1.9237967914438503e-7
 		}
 	]
 })

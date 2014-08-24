@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html ng-app>
 <head>
 	<title>uGravity</title>
 	<style>
@@ -10,7 +10,12 @@
 	}
 	</style>
 </head>
-<body>
+<body ng-controller="Controller">
 	<canvas data-ugravity-src="sun-earth-moon.jsonp" width="1440" height="900"></canvas>
+	<br />
+	<h4>Methods</h4>
+	<button onclick="simulations[0].start()">simulation.start()</button>
+	<button onclick="simulations[0].stop()">simulation.stop()</button>
+	<button onclick="simulations[0].normalize()">simulation.normalize()</button>
 	<script src="uGravity.js"></script>
 </body>

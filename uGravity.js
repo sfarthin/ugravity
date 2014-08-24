@@ -850,6 +850,8 @@
 	if(typeof document != "undefined") {
 		var elements = document.querySelectorAll("canvas[data-ugravity-src]");
 	
+		window.simulations = [];
+	
 		for(var i in elements) {
 			(function(element) {
 				if(element.getAttribute) {
@@ -866,7 +868,7 @@
 						if(!jsonp_opts || typeof jsonp_opts != "object") {
 							throw "Error loading uGravity datafile: " + src;
 						} else {
-							new uGravity(element, jsonp_opts);
+							window.simulations.push(new uGravity(element, jsonp_opts));
 						}
 					
 						// Make certain this temporary variable is reset between uGravity script loads
